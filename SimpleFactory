@@ -1,0 +1,83 @@
+/*
+继承体系存在多态时，按理说应该有个虚的析构函数。
+但这里主要探讨的设计模式。所以没有写虚析构函数 
+*/
+#include <iostream>
+
+using namespace std;
+
+enum ProductTypeTag
+{
+	TypeA,TypeB,TypeC
+};
+
+class Product
+{
+	public :
+		virtual void Show()=0;
+};
+class ProductA :public Product
+{
+	public :
+		virtual void Show()
+		{
+			cout<<"I'm productA"<<endl;
+		}
+};
+class ProductB :public Product
+{
+	public :
+		virtual void Show()
+		{
+			cout<<"I'm productB"<<endl; 
+		}
+};
+class ProductC :public Product
+{
+	public :
+		virtual void Show()
+		{
+			cout<<"I'm productC"<<endl;
+		}
+};
+class Factory
+{
+	public :
+		Product* CreateProduct(ProductTypeTag type)
+		{
+			switch(type)
+			{
+				case TypeA:return new ProductA();
+				case TypeB:return new ProductB();
+				case TypeC:return new ProductC();
+				default : return NULL;		
+			}
+		}
+};
+
+int main()
+{
+	Factory *ProductFactory=new Factory();
+	Product *productObjA=ProductFactory->CreateProduct(TypeA);
+	if(NULL!=productObjA)
+		productObjA->Show();
+	
+	Product *productObjB=ProductFactory->CreateProduct(TypeB);
+	if(NULL!=productObjB)
+		productObjB->Show();
+	
+	Product *productObjC=ProductFactory->CreateProduct(TypeC);
+	if(NULL!=productObjC)
+		productObjC->Show();
+	
+	delete productObjA;
+	productObjA=NULL;
+	
+	delete productObjB;
+	productObjB=NULL;
+	
+	delete productObjB;
+	productObjB=NULL;
+	
+	return 0;	
+}
